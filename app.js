@@ -18,7 +18,12 @@ const rateRoute = require('./Routes/rate');
 app.use(morgan('tiny'));
 app.use(helmet());
 
-
+mongoose.connect(`mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PWD}@cluster0-qk47v.mongodb.net/Crep?retryWrites=true&w=majority`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+    .then(()=>{console.log('connected')},
+    err => { console.error(err) });
 
 
 
@@ -34,10 +39,10 @@ app.use('/rate',rateRoute);
 //serve static assets if we are in production 
 if( process.env.NODE_ENV === 'production'){
     //set static older 
-    app.use(express.static(path.join(__dirname  , '/static')));
+    app.use(express.static(path.join(__dirname  , 'client/build')));
 
     app.get('*' , (req,res,next) => {
-        res.sendfile(path.join(__dirname  , 'static/index.html'));
+        res.sendfile(path.join(__dirname  , 'client/build/index.html'));
     });
 }
 
